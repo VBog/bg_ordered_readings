@@ -8,7 +8,7 @@ License: GPLv2
 
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Круг рядовых чтений
+Круг рядовых чтений на богослужениях
 
 
 ## Description ##
@@ -16,9 +16,13 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 **ФУНКЦИИ ДЛЯ РАСЧЕТА РЯДОВЫХ ЧТЕНИЙ**
 
 `bg_Gospel_at_Liturgy ($date)` 	- чтение Евангелие на Литургии
+
 `bg_Apostol_at_Liturgy ($date)` - чтение Апостола на Литургии
+
 `bg_Gospel_at_Matins ($date)` 	- чтение Евангелие на Утрене
+
 *Параметры:*
+
 `$date` - дата по новому стилю в формате Y-m-d
 
 Чтобы вывести в календаре полный список чтений, необходимо создать БД чтений на Праздники и святым 
