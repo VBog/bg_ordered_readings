@@ -1,6 +1,8 @@
 <?php
 /*======================================================================================================
 					ФУНКЦИИ ДЛЯ РАСЧЕТА РЯДОВЫХ ЧТЕНИЙ
+					
+	Версия 1.0.1
 
 		bg_Gospel_at_Liturgy ($date) 	- чтение Евангелие на Литургии
 		bg_Apostol_at_Liturgy ($date) 	- чтение Апостола на Литургии
@@ -77,12 +79,12 @@ function bg_date_easter_dif($date, $year) {
 		Дату Недели по Богоявлению в формате Y-m-d	
 *******************************************************************************/
 function bg_get_sunday_after_еpiphany ($year, $old=false) {
-	$exaltation = (int) date( 'N', mktime ( 0, 0, 0, 1, 6+bg_ddif($year-1), $year ) );	// День недели Богоявления от 1 до 7
-	$diff = 7-$exaltation; 			// Осталось до Недели по Богоявлению
+	$еpiphany = (int) date( 'N', mktime ( 0, 0, 0, 1, 6+bg_ddif($year-1), $year ) );	// День недели Богоявления от 1 до 7
+	$diff = 7-$еpiphany; 			// Осталось до Недели по Богоявлению
 	if ($diff == 0) $diff = 7;		// Если Богоявление в воскресенье, то через 7 дней
 	
 	if ($old) $dd = 0;
-	else $dd = bg_ddif($year);
+	else $dd = bg_ddif($year-1);
 	return date( 'Y-m-d', mktime ( 0, 0, 0, 1, 6+$diff+$dd, $year ) );
 }
 /*******************************************************************************
@@ -109,13 +111,13 @@ function bg_get_sunday_after_exaltation($year, $old=false) {
 		Дату Недели Святых Праотец в формате Y-m-d	
 *******************************************************************************/
 function bg_get_sunday_holy_forefathers($year, $old=false) {
-	$christmas = (int) date( 'N', mktime ( 0, 0, 0, 12, 25+bg_ddif($year), $year ) );	// День недели Рождества от 1 до 7
+	$christmas = (int) date( 'N', mktime ( 0, 0, 0, 12, 25+bg_ddif($year-1), $year ) );	// День недели Рождества от 1 до 7
 	$diff = -$christmas; 			// Прошло от Недели перед Рождеством, Святых Отец
 	if ($diff == 0) $diff = -7;		// Если Рождество в воскресенье, то на 7 дней ранее
 	$diff -= 7;						// Неделя Святых Праотец предшествует Неделе Святых Отец
 	
 	if ($old) $dd = 0;
-	else $dd = bg_ddif($year);
+	else $dd = bg_ddif($year-1);
 	return date( 'Y-m-d', mktime ( 0, 0, 0, 12, 25+$diff+$dd, $year ) );
 }
 
