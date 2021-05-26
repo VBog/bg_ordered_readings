@@ -1,0 +1,24 @@
+{
+    "name": "vbog/bg-ordered-readings",
+    "description": "",
+    "homepage": "https://github.com/VBog/bg_ordered_readings",
+    "license": "GPLv2",
+    "authors": [
+        {
+            "name": "Вадим Богайсков"
+        },
+        {
+            "name": "Kalinichenko Roman",
+            "email": "kalinichenko.roman.webdev@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3"
+    },
+    "autoload": {
+        "files": [ "bg_ordered_readings.php" ]
+    },
+    "autoload-dev": {
+        "files": [ "bg_ordered_readings.php" ]
+    }
+}
