@@ -37,7 +37,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 3.	Чтения всем остальным  иконам Пресятой Богородице, ангелам, апостолам и святым 
 выводим отдельной строкой после основных чтений с указанием лика святости.
 		
-
+https://stackoverflow.com/questions/23793062/can-forks-be-synced-automatically-in-github/61574295#61574295
 
 ## Changelog ##
 
