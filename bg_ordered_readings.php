@@ -77,7 +77,7 @@ class OrderedReadings
     *******************************************************************************/
     private function bg_date_easter_dif($date, $year)
     {
-        $interval = date_diff(date_create(bg_get_easter($year)), date_create($date));
+        $interval = date_diff(date_create($this->bg_get_easter($year)), date_create($date));
         return (int)$interval->format('%R%a');
     }
     /*******************************************************************************
@@ -89,7 +89,7 @@ class OrderedReadings
     *******************************************************************************/
     private function bg_get_sunday_after_еpiphany($year, $old=false)
     {
-        $еpiphany = (int) date('N', mktime(0, 0, 0, 1, 6+bg_ddif($year-1), $year));	// День недели Богоявления от 1 до 7
+        $еpiphany = (int) date('N', mktime(0, 0, 0, 1, 6+$this->bg_ddif($year-1), $year));	// День недели Богоявления от 1 до 7
     $diff = 7-$еpiphany; 			// Осталось до Недели по Богоявлению
     if ($diff == 0) {
         $diff = 7;
@@ -111,7 +111,7 @@ class OrderedReadings
     *******************************************************************************/
     private function bg_get_sunday_after_exaltation($year, $old=false)
     {
-        $exaltation = (int) date('N', mktime(0, 0, 0, 9, 14+bg_ddif($year), $year));	// День недели Воздвижения от 1 до 7
+        $exaltation = (int) date('N', mktime(0, 0, 0, 9, 14+$this->bg_ddif($year), $year));	// День недели Воздвижения от 1 до 7
     $diff = 7-$exaltation; 			// Осталось до Недели по Воздвижению
     if ($diff == 0) {
         $diff = 7;
@@ -133,7 +133,7 @@ class OrderedReadings
     *******************************************************************************/
     private function bg_get_sunday_holy_forefathers($year, $old=false)
     {
-        $christmas = (int) date('N', mktime(0, 0, 0, 12, 25+bg_ddif($year-1), $year));	// День недели Рождества от 1 до 7
+        $christmas = (int) date('N', mktime(0, 0, 0, 12, 25+$this->bg_ddif($year-1), $year));	// День недели Рождества от 1 до 7
     $diff = -$christmas; 			// Прошло от Недели перед Рождеством, Святых Отец
     if ($diff == 0) {
         $diff = -7;
@@ -400,8 +400,8 @@ class OrderedReadings
         $is_sunday = (date_format(date_create($date), 'N') == '7')?true:false;
     
         $interval_last_year = $this->bg_date_easter_dif($date, $year-1);	// Дней от предыдущей Пасхи
-    $christmas = date('Y-m-d', mktime(0, 0, 0, 12, 25+bg_ddif($year), $year-1));											// Рождество
-    $еpiphany = date('Y-m-d', mktime(0, 0, 0, 01, 06+bg_ddif($year), $year-1));												// Богоявление
+    $christmas = date('Y-m-d', mktime(0, 0, 0, 12, 25+$this->bg_ddif($year), $year-1));											// Рождество
+    $еpiphany = date('Y-m-d', mktime(0, 0, 0, 01, 06+$this->bg_ddif($year), $year-1));												// Богоявление
     $palm_sunday = date_format(date_sub(date_create($easter), date_interval_create_from_date_string("7 days")), 'Y-m-d');		// Вербное воскресенье
     $low_sunday = date_format(date_add(date_create($easter), date_interval_create_from_date_string("7 days")), 'Y-m-d');		// Фомина Неделя
     $allhallows_sunday = date_format(date_add(date_create($easter), date_interval_create_from_date_string("56 days")), 'Y-m-d');// День Всех Святых
