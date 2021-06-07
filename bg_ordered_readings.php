@@ -2,7 +2,7 @@
 /*======================================================================================================
 					ФУНКЦИИ ДЛЯ РАСЧЕТА РЯДОВЫХ ЧТЕНИЙ
 					
-	Версия 1.0.2
+	Версия 1.0.3
 
 		bg_Gospel_at_Liturgy ($date) 	- чтение Евангелие на Литургии
 		bg_Apostol_at_Liturgy ($date) 	- чтение Апостола на Литургии
@@ -72,20 +72,19 @@ function bg_date_easter_dif($date, $year) {
 	return (int)$interval->format('%R%a');
 }
 /*******************************************************************************
-	Функция определяет дату Недели по Богоявлению (Просещении) (14.09 по ст.ст.)
+	Функция определяет дату Конца годового круга
 		$year - год в формате Y
 		$old = true - возвращает дату по старому стилю, false - по новому стилю
 	Возвращает:
-		Дату Недели по Богоявлению в формате Y-m-d	
+		Дату Конца годового круга в формате Y-m-d	
 *******************************************************************************/
-function bg_get_sunday_after_еpiphany ($year, $old=false) {
-	$еpiphany = (int) date( 'N', mktime ( 0, 0, 0, 1, 6+bg_ddif($year-1), $year ) );	// День недели Богоявления от 1 до 7
-	$diff = 7-$еpiphany; 			// Осталось до Недели по Богоявлению
-	if ($diff == 0) $diff = 7;		// Если Богоявление в воскресенье, то через 7 дней
-	
+function bg_get_end_of_cycle ($year, $old=false) {
+	$sunday_after_exaltation = bg_get_sunday_after_exaltation($year-1, true);	// Неделя по Воздвижении прошлого года по ст.ст.
+	list ($y, $m, $d) = explode ('-',$sunday_after_exaltation);
+
 	if ($old) $dd = 0;
 	else $dd = bg_ddif($year-1);
-	return date( 'Y-m-d', mktime ( 0, 0, 0, 1, 6+$diff+$dd, $year ) );
+	return date( 'Y-m-d', mktime ( 0, 0, 0, $m, $d+112+$dd, $y ) );
 }
 /*******************************************************************************
 	Функция определяет дату Недели по Воздвижению (14.09 по ст.ст.)
@@ -187,14 +186,13 @@ function bg_Gospel_at_Liturgy ($date) {
 			'274'=>'Мк.12:13-17','275'=>'Мк.12:18-27','276'=>'Мк.12:28-37','277'=>'Мк.12:38-44','278'=>'Мк.13:1-8','279'=>'Лк.18:2-8','280'=>'Лк.18:10-14'];		// 33 по Пятидесятнице *
 
 	list($year, $month, $day) = explode ('-', $date); 
-	$easter = bg_get_easter($year);
 	$interval = bg_date_easter_dif($date, $year);
 	$key = $interval;
 	
 	// Вычисляем Крещенскую отступку
-	$sunday_after_еpiphany = bg_get_sunday_after_еpiphany($year);		// Неделя по Богоявлению
-	$interval_еpiphany = bg_date_easter_dif($sunday_after_еpiphany, $year);	// Количество дней до Недели по Богоявлению от Пасхи (отрицательное число)
-	$shift_еpiphany = 70 + $interval_еpiphany;							// Крещенская отступка(-)
+	$end_of_cycle = bg_get_end_of_cycle ($year);						// Конец годового круга
+	$interval_end_of_cycle = bg_date_easter_dif($end_of_cycle, $year);	// Количество дней до Конца годового круга от Пасхи (отрицательное число)
+	$shift_еpiphany = 70 + $interval_end_of_cycle;						// Крещенская отступка(-)
 
 	// Вычисляем Воздвиженскую отступку/преступку
 	$sunday_after_exaltation = bg_get_sunday_after_exaltation($year);	// Неделя по Воздвижению
@@ -202,10 +200,10 @@ function bg_Gospel_at_Liturgy ($date) {
 	$shift_exaltation = 168 - $interval_exaltation;						// Воздвиженская отступка(-)/преступка(+)
 
 	// Разбиваем год на 3 части
-	if ($date <= $sunday_after_еpiphany) {								// До Недели по Богоявлению завершаем круг чтения прошлого года
-		$before_еpiphany = $interval - $interval_еpiphany;				// Дней до Богоявления (-)
-		$key = 280 + $before_еpiphany;
-	} elseif ($date <= $sunday_after_exaltation) {						// После Недели по Богоявлению до Недели по Воздвижению
+	if ($date <= $end_of_cycle) {										// Завершаем круг чтения прошлого года
+		$before_end_of_cycle = $interval - $interval_end_of_cycle;		// Дней до конца годового круга (-)
+		$key = 280 + $before_end_of_cycle;
+	} elseif ($date <= $sunday_after_exaltation) {						// После Конца годового круга до Недели по Воздвижению
 		// Это смещение требуется, если использовать вариант 30, 31, 17, 32, 33 седмицы при 5 недельной Крещенской отступке,
 		// для 3 или 4 недельной Крещенской отступки просто игнорируем 17 седмицу
 		if ($interval <= -84 && ($shift_еpiphany < -14 && $shift_еpiphany > -35)) { 
@@ -301,25 +299,23 @@ function bg_Apostol_at_Liturgy ($date) {
 
 
 	list($year, $month, $day) = explode ('-', $date); 
-	$easter = bg_get_easter($year);
 	$interval = bg_date_easter_dif($date, $year);
 	$key = $interval;
 	
 	// Вычисляем Крещенскую отступку
-	$sunday_after_еpiphany = bg_get_sunday_after_еpiphany($year);		// Неделя по Богоявлению
-	$interval_еpiphany = bg_date_easter_dif($sunday_after_еpiphany, $year);	// Количество дней до Недели по Богоявлению от Пасхи (отрицательное число)
-	$shift_еpiphany = 70 + $interval_еpiphany;							// Крещенская отступка(-)
+	$end_of_cycle = bg_get_end_of_cycle ($year);						// Конец годового круга
+	$interval_end_of_cycle = bg_date_easter_dif($end_of_cycle, $year);	// Количество дней до Конца годового круга от Пасхи (отрицательное число)
+	$shift_еpiphany = 70 + $interval_end_of_cycle;						// Крещенская отступка(-)
 
 	// Вычисляем Воздвиженскую отступку/преступку предыдущего года
 	$sunday_after_exaltation = bg_get_sunday_after_exaltation($year-1);	// Неделя по Воздвижению
 	$interval_exaltation = bg_date_easter_dif($sunday_after_exaltation, $year-1);// Количество дней до Недели по Воздвижению от Пасхи
 	$shift_exaltation = 168 - $interval_exaltation;						// Воздвиженская отступка(-)/преступка(+)
 
-
+	
 	// Разбиваем год на 2 части
-	if ($date <= $sunday_after_еpiphany) {								// До Недели по Богоявлению завершаем круг чтения прошлого года
-		$before_еpiphany = $interval - $interval_еpiphany;				// Дней до Богоявления (-)
-		$key = 280 - $shift_exaltation + $before_еpiphany;				// На Неделю по Богоявлению приходится не ровно 280 дней, а от 259 (преступка) до 294 (отступка)
+	if ($date <= $end_of_cycle) {										// Завершаем круг чтения прошлого года
+		$key = bg_date_easter_dif($date, $year-1);
 		if ($shift_exaltation < 0) {									// Если в прошлом году случилась Воздвиженская отступка, 
 			$key += $shift_exaltation;									// то повторяем одну или две последние седмицы до Недели по Богоявлению (33 или 32 и 33 по Пятидесятнице)
 		}
@@ -329,7 +325,6 @@ function bg_Apostol_at_Liturgy ($date) {
 		if ($interval <= -84 && ($shift_еpiphany < -14 && $shift_еpiphany > -35)) { 
 			$key -= 7;
 		}
-
 	}
 	
 	// Апостольское зачало 29 Недели читается в Неделю святых праотец,
