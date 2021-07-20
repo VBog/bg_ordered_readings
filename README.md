@@ -49,6 +49,9 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 ## Changelog ##
 
+= 2.0.1 =
+* Исправил опечатки в ссылках на Св.Писание
+
 = 2.0.0 =
 * Функции обернуты в класс `OrderedReadings`
 * Добавлен расширяющий класс `FeastReadings`
