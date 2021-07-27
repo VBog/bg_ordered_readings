@@ -19,6 +19,6 @@
         "files": [ "bg_feast_readings.php" ]
     },
     "autoload-dev": {
-        "files": [ "bg_ordered_readings.php" ]
+        "files": [ "bg_feast_readings.php" ]
     }
 }
