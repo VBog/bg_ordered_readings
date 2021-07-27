@@ -16,9 +16,9 @@
         "php": ">=5.3"
     },
     "autoload": {
-        "files": [ "bg_feast_readings.php" ]
+        "files": [ "bg_feast_readings.php", "bg_ordered_readings.php" ]
     },
     "autoload-dev": {
-        "files": [ "bg_feast_readings.php" ]
+        "files": [ "bg_ordered_readings.php", "bg_ordered_readings.php" ]
     }
 }
